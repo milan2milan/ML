@@ -1,4 +1,4 @@
-#Using CNN Image classification
+#<------------------------------------------Using CNN Image classification------------------------------------------------>
 
 import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
@@ -107,3 +107,142 @@ plt.figure(figsize=(7,5))
 sn.heatmap(cm,annot=True,fmt='d')
 plt.xlabel('Predicted')
 plt.ylabel('Truth')
+
+
+#---------------------------------------------------------------------------------------------------------------
+#<----------------------------Decission Tree---------------->
+import pandas as pd
+import numpy as np
+data=pd.read_csv("https://raw.githubusercontent.com/apratim777/apratim777/master/salaries.csv")
+data
+x=data.drop('salary_more_then_100k',axis=1)
+x
+y=data.drop(['company','job','degree'],axis=1)
+y
+
+from sklearn.preprocessing import LabelEncoder
+leb_en=LabelEncoder()
+x['company_name']=leb_en.fit_transform(x['company'])
+x['job_name']=leb_en.fit_transform(x['job'])
+x['degree_name']=leb_en.fit_transform(x['degree'])
+
+new_data=x.drop(['company','job','degree',],axis=1)
+new_data
+
+from sklearn import tree
+model=tree.DecisionTreeClassifier()
+model
+
+model.fit(new_data,y)
+model.score(new_data,y)
+model.predict([[1,0,1]])
+
+
+#---------------------------------------- Digit Recognission(P)-------------------------------------
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_digits
+digits=load_digits()
+dir(digits)
+plt.gray()
+from sklearn.model_selection import train_test_split
+train_x,test_x,train_y,test_y=train_test_split(digits.data,digits.target,train_size=0.8)
+from sklearn.linear_model import LogisticRegression
+model=LogisticRegression()
+model.fit(train_x,train_y)
+model.predict(digits.data[[1796]])
+plt.matshow(digits.images[1796])
+
+#------------------------------------------------------------------------------------------------------------------
+#---------------logistic Regration using binary classification----------#
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+url='https://raw.githubusercontent.com/apratim777/apratim777/master/insurance_data.csv'
+data=pd.read_csv(url)
+data
+x=data.drop('bought_insurance',axis=1)
+x
+y=data.bought_insurance
+y
+from sklearn.model_selection import train_test_split
+train_x,test_x,train_y,test_y=train_test_split(x,y,train_size=0.8)
+test_x
+from sklearn.linear_model import LogisticRegression
+reg=LogisticRegression()
+reg.fit(train_x,train_y)
+y_predict=reg.predict(test_x)
+y_predict
+reg.score(test_x,test_y)
+
+
+#----------------------------------------------------------------------------------------------------------------
+#<-----------------------------------Polynomial Regration--------------------------------------->
+
+import pandas as pd
+import numpy as np
+from sklearn import linear_model
+import matplotlib.pyplot as plt
+url='https://raw.githubusercontent.com/apratim777/apratim777/master/Position_Salaries.csv'
+data=pd.read_csv(url)
+data
+
+x=data.drop(['Position','Salary'],axis=1)
+x
+from sklearn.preprocessing import PolynomialFeatures
+poly=PolynomialFeatures(degree=4)
+x_poly=poly.fit_transform(x)
+x_poly
+reg=linear_model.LinearRegression()
+reg.fit(x_poly,data.Salary)
+reg.score(x_poly,data.Salary)
+
+plt.xlabel('Level')
+plt.ylabel('Salary')
+plt.scatter(x,data.Salary)
+plt.plot(x,reg.predict(x_poly))
+
+#--------------------------------------------------------------------------------------------------
+#<---------------------------------Simple Linear Regression--------------------------------------->
+
+import pandas as pd
+import numpy as np
+from sklearn import linear_model#sikitlearn all algo have in this
+import matplotlib.pyplot as plt
+
+url1='https://raw.githubusercontent.com/apratim777/apratim777/master/homeprices.csv'
+mca=pd.read_csv(url1)
+mca
+
+new_x=mca.drop('price',axis=1)
+new_x
+new_y=mca.drop('area',axis=1)
+new_y
+
+reg=linear_model.LinearRegression()
+reg.fit(new_x,new_y)
+
+reg.score(new_x,new_y)
+
+plt.xlabel("Area")
+plt.ylabel("Price")
+plt.scatter(new_x,reg.predict(new_x))
+plt.plot(new_x,reg.predict(new_x))
+
+#---------------------------------------------------------------------------------------------------------
+#--------------------------------Multiple Regression-----------------------------------------------------
+
+import pandas as pd
+import numpy as np
+from sklearn import linear_model
+import matplotlib.pyplot as plt
+
+url2='https://raw.githubusercontent.com/apratim777/apratim777/master/homeprices1.csv'
+mca2=pd.read_csv(url2)
+mca2
+mca2.bedrooms = mca2.bedrooms.fillna(mca2.bedrooms.median())
+mca2
+x=mca2.drop('price',axis=1)
+x
+reg=linear_model.LinearRegression()
+reg.fit(x,mca2.price)
+reg.score(x,mca2.price)
